@@ -1,6 +1,7 @@
 package main
 
 import (
+	"path"
 	"regexp"
 	"strings"
 )
@@ -13,6 +14,8 @@ var featureExtractors = []func(Tweet) Feature{
 	DCSList,
 	PositiveListCount,
 	NegativeListCount,
+	Posemo,
+	Negemo,
 }
 
 func ExclamationMarks(t Tweet) Feature {
@@ -101,6 +104,44 @@ func NegativeListCount(t Tweet) Feature {
 	}
 	return Feature{
 		Name:  "negative_list",
+		Type:  Numeric,
+		Value: count,
+	}
+}
+
+func Posemo(t Tweet) Feature {
+	count := 0
+	wordRE := regexp.MustCompile(`\w+`)
+	matchs := wordRE.FindAllString(t.Corpus, -1)
+	for _, word := range matchs {
+		word := strings.ToLower(strings.TrimSpace(word))
+		for _, wildcard := range posemoWildcard {
+			if ok, _ := path.Match(wildcard, word); ok {
+				count++
+			}
+		}
+	}
+	return Feature{
+		Name:  "posemo_list",
+		Type:  Numeric,
+		Value: count,
+	}
+}
+
+func Negemo(t Tweet) Feature {
+	count := 0
+	wordRE := regexp.MustCompile(`\w+`)
+	matchs := wordRE.FindAllString(t.Corpus, -1)
+	for _, word := range matchs {
+		word := strings.ToLower(strings.TrimSpace(word))
+		for _, wildcard := range posemoWildcard {
+			if ok, _ := path.Match(wildcard, word); ok {
+				count++
+			}
+		}
+	}
+	return Feature{
+		Name:  "negemo_list",
 		Type:  Numeric,
 		Value: count,
 	}

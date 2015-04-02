@@ -10,6 +10,11 @@ import (
 	"strings"
 )
 
+/*
+Here we do the dirty work of importing word lists or building
+them on the fly.
+*/
+
 var happyEmojies = func() []string {
 	var eyes = []string{
 		":", ";", "=", "X", ":-", ";-", "=-", "X-",
@@ -118,6 +123,54 @@ var positive = func() map[string]struct{} {
 
 	for _, word := range words {
 		out[strings.TrimSpace(strings.ToLower(word))] = struct{}{}
+	}
+
+	return out
+}()
+
+var negemoWildcard = func() []string {
+
+	list, err := wordlists_negemo_txt()
+	if err != nil {
+		log.Panic(err)
+	}
+
+	out := []string{}
+	uniq := map[string]struct{}{}
+
+	wordRE := regexp.MustCompile(`\w+\*?`)
+	words := wordRE.FindAllString(string(list.bytes), -1)
+
+	for _, word := range words {
+		word = strings.TrimSpace(strings.ToLower(word))
+		if _, ok := uniq[word]; !ok {
+			uniq[word] = struct{}{}
+			out = append(out, word)
+		}
+	}
+
+	return out
+}()
+
+var posemoWildcard = func() []string {
+
+	list, err := wordlists_posemo_txt()
+	if err != nil {
+		log.Panic(err)
+	}
+
+	out := []string{}
+	uniq := map[string]struct{}{}
+
+	wordRE := regexp.MustCompile(`\w+\*?`)
+	words := wordRE.FindAllString(string(list.bytes), -1)
+
+	for _, word := range words {
+		word = strings.TrimSpace(strings.ToLower(word))
+		if _, ok := uniq[word]; !ok {
+			uniq[word] = struct{}{}
+			out = append(out, word)
+		}
 	}
 
 	return out
