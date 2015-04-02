@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"io"
 	"log"
+	"regexp"
 	"strconv"
 	"strings"
 )
@@ -79,6 +80,44 @@ var dsclist = func() map[string]float64 {
 			continue
 		}
 		out[word] = score
+	}
+
+	return out
+}()
+
+var negative = func() map[string]struct{} {
+
+	list, err := wordlists_negative_txt()
+	if err != nil {
+		log.Panic(err)
+	}
+
+	out := map[string]struct{}{}
+
+	wordRE := regexp.MustCompile(`\w+`)
+	words := wordRE.FindAllString(string(list.bytes), -1)
+
+	for _, word := range words {
+		out[strings.TrimSpace(strings.ToLower(word))] = struct{}{}
+	}
+
+	return out
+}()
+
+var positive = func() map[string]struct{} {
+
+	list, err := wordlists_positive_txt()
+	if err != nil {
+		log.Panic(err)
+	}
+
+	out := map[string]struct{}{}
+
+	wordRE := regexp.MustCompile(`\w+`)
+	words := wordRE.FindAllString(string(list.bytes), -1)
+
+	for _, word := range words {
+		out[strings.TrimSpace(strings.ToLower(word))] = struct{}{}
 	}
 
 	return out

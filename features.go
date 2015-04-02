@@ -11,6 +11,8 @@ var featureExtractors = []func(Tweet) Feature{
 	HappyEmoticon,
 	AngryEmoticon,
 	DCSList,
+	PositiveListCount,
+	NegativeListCount,
 }
 
 func ExclamationMarks(t Tweet) Feature {
@@ -69,5 +71,37 @@ func DCSList(t Tweet) Feature {
 		Name:  "dcs_list_score",
 		Type:  NumericFloat,
 		Value: score,
+	}
+}
+
+func PositiveListCount(t Tweet) Feature {
+	count := 0
+	wordRE := regexp.MustCompile(`\w+`)
+	matchs := wordRE.FindAllString(t.Corpus, -1)
+	for _, word := range matchs {
+		if _, ok := positive[strings.ToLower(strings.TrimSpace(word))]; ok {
+			count++
+		}
+	}
+	return Feature{
+		Name:  "positive_list",
+		Type:  Numeric,
+		Value: count,
+	}
+}
+
+func NegativeListCount(t Tweet) Feature {
+	count := 0
+	wordRE := regexp.MustCompile(`\w+`)
+	matchs := wordRE.FindAllString(t.Corpus, -1)
+	for _, word := range matchs {
+		if _, ok := negative[strings.ToLower(strings.TrimSpace(word))]; ok {
+			count++
+		}
+	}
+	return Feature{
+		Name:  "negative_list",
+		Type:  Numeric,
+		Value: count,
 	}
 }
