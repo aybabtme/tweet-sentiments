@@ -68,7 +68,7 @@ func ParseTweets(rd io.Reader) ([]Tweet, error) {
 		values := strings.Split(line, "\t")
 
 		for i, v := range values {
-			values[i] = strings.TrimSpace(v)
+			values[i] = strings.TrimSpace(strings.ToLower(v))
 		}
 
 		if len(values) != 4 {

@@ -58,6 +58,19 @@ var angryEmojies = func() []string {
 	return emojies
 }()
 
+var q = struct{}{}
+
+var badWordList = []string{
+	"fuck",
+	"suck",
+	"asshole",
+}
+
+var goodWordList = []string{
+	"happy",
+	"joy",
+}
+
 var dsclist = func() map[string]float64 {
 
 	list, err := wordlists_dsclist_2_txt()

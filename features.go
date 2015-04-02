@@ -11,6 +11,9 @@ var featureExtractors = []func(Tweet) Feature{
 	QuestionMarks,
 	DotMarks,
 	WordCount,
+	LetterCount,
+	BadWordCount,
+	GoodWordCount,
 	HappyEmoticon,
 	AngryEmoticon,
 	DCSList,
@@ -49,6 +52,38 @@ func WordCount(t Tweet) Feature {
 		Name:  "word_count",
 		Type:  Numeric,
 		Value: len(regexp.MustCompile(`\w+`).FindAllString(t.Corpus, -1)),
+	}
+}
+
+func LetterCount(t Tweet) Feature {
+	return Feature{
+		Name:  "letter_count",
+		Type:  Numeric,
+		Value: len(t.Corpus),
+	}
+}
+
+func BadWordCount(t Tweet) Feature {
+	count := 0
+	for _, badword := range badWordList {
+		count += strings.Count(t.Corpus, badword)
+	}
+	return Feature{
+		Name:  "bad_word_count",
+		Type:  Numeric,
+		Value: count,
+	}
+}
+
+func GoodWordCount(t Tweet) Feature {
+	count := 0
+	for _, goodword := range goodWordList {
+		count += strings.Count(t.Corpus, goodword)
+	}
+	return Feature{
+		Name:  "good_word_count",
+		Type:  Numeric,
+		Value: count,
 	}
 }
 
