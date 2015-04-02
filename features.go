@@ -9,6 +9,8 @@ import (
 var featureExtractors = []func(Tweet) Feature{
 	ExclamationMarks,
 	QuestionMarks,
+	DotMarks,
+	WordCount,
 	HappyEmoticon,
 	AngryEmoticon,
 	DCSList,
@@ -31,6 +33,22 @@ func QuestionMarks(t Tweet) Feature {
 		Name:  "question_marks",
 		Type:  Numeric,
 		Value: strings.Count(t.Corpus, "?"),
+	}
+}
+
+func DotMarks(t Tweet) Feature {
+	return Feature{
+		Name:  "dot_marks",
+		Type:  Numeric,
+		Value: strings.Count(t.Corpus, "."),
+	}
+}
+
+func WordCount(t Tweet) Feature {
+	return Feature{
+		Name:  "word_count",
+		Type:  Numeric,
+		Value: len(regexp.MustCompile(`\w+`).FindAllString(t.Corpus, -1)),
 	}
 }
 
