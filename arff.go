@@ -28,7 +28,7 @@ func MakeArff(tweets []Tweet, out io.WriteCloser) error {
 	featureNames := uniqueFeatures(tweets)
 
 	fmt.Fprintf(w, "@relation opinion\n")
-	// fmt.Fprintf(w, "@attribute sentence string\n")
+	fmt.Fprintf(w, "@attribute sentence string\n")
 	fmt.Fprintf(w, "@attribute category {positive,negative,neutral,objective}\n")
 
 	for _, ft := range featureNames {
@@ -48,7 +48,7 @@ func MakeArff(tweets []Tweet, out io.WriteCloser) error {
 
 	for i, tweet := range tweets {
 
-		// fmt.Fprintf(w, "%q,", tweet.Corpus)
+		fmt.Fprintf(w, "%q,", tweet.Corpus)
 		fmt.Fprintf(w, "%s", tweet.Sentiment)
 
 		for _, ft := range tweet.Features {
